@@ -1,30 +1,30 @@
 """Several termux utility functions."""
-from pathlib import Path
 from typing import Union
 import re
 import subprocess
 
+from config import TERMUX
 
-TERMUX_PATH = Path.home() / ".termux"
+
+configs_file = TERMUX / "termux.properties"
 
 
 def get_config(key: str) -> Union[str, None]:
     """Read a configuration from the properties file."""
-    configs_file = TERMUX_PATH / "termux.properties"
-    configs = configs_file.read_text()
-
+    alt = f"### {key}\n\n###"
+    configs = configs_file.read_text() if configs_file.exists() else alt
     pattern = fr"^### {key}$.*?^###"
     start = len(f"### {key}")
     end = len("###") * -1
+
     match = re.search(pattern, configs, flags=re.MULTILINE | re.DOTALL)
     return match.group()[start:end].strip() if match else None
 
 
 def set_config(key: str, value: str):
     """Write a configuration to the properties file."""
-    configs_file = TERMUX_PATH / "termux.properties"
-    configs = configs_file.read_text()
-
+    alt = f"### {key}\n\n###"
+    configs = configs_file.read_text() if configs_file.exists() else alt
     pattern = fr"^### {key}$.*?^###"
     repl = f"### {key}\n{value}\n\n###"
 
