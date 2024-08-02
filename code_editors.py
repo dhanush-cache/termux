@@ -1,6 +1,9 @@
+import subprocess
+
 from installers.pkg import PKGInstaller
 from installers.vscode import VSCodeExtension
-from config import BIN
+from config import BIN, HOME
+from utils import git
 
 
 def install_code_oss():
@@ -30,3 +33,12 @@ def install_code_oss():
         "ms-vscode.cpptools",
     ]
     VSCodeExtension(*extensions)
+
+
+def install_neovim():
+    PKGInstaller("neovim", "build-essential", "nodejs-lts", "python-pip", "clang")
+    url = "https://github.com/NvChad/starter"
+    path = HOME/".config"/"nvim" 
+    git.clone(url, path, shallow=True)
+    command = ["nvim", "--headless", "-c", "q"]
+    subprocess.run(command)
