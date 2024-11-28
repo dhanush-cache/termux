@@ -10,11 +10,10 @@ from config import TERMUX
 
 def configure_colors():
     """Apply the Argonaut color theme."""
-    url = "https://raw.githubusercontent.com/Gogh-Co/Gogh/master/json/argonaut.json"
+    url = "https://raw.githubusercontent.com/Gogh-Co/Gogh/refs/heads/master/data/json/argonaut.json"
     response = requests.get(url)
     colors_file = TERMUX / "colors.properties"
     initial_data = colors_file.read_text() if colors_file.exists() else None
-
     color_codes = json.loads(response.text)
 
     final_data = ""
